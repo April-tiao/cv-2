@@ -1,0 +1,27 @@
+{
+  "train": {
+    "total": 4680,
+    "by_label": {
+      "positive": 2340,
+      "negative": 2340
+    },
+    "by_source": {
+      "train/2026_04_30_统计图表_百度图片搜索": 2246,
+      "train/chart": 25,
+      "train/food": 61,
+      "train/fruit": 8,
+      "C:\\Users\\MyPC\\Documents\\New project 4\\balanced_cache_negatives_exact_160\\train": 2340
+    }
+  },
+  "test": {
+    "total": 66,
+    "by_label": {
+      "positive": 33,
+      "negative": 33
+    },
+    "by_source": {
+      "test/food": 33,
+      "C:\\Users\\MyPC\\Documents\\New project 4\\balanced_cache_negatives_exact_160\\test": 33
+    }
+  }
+}

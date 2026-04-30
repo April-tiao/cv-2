@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+
+# Local source images and generated image caches
+train/
+test/
+cache_*/
+balanced_cache_*/
+balanced_cache_negatives_exact_160/
+public_digits_negatives_160/
+public_cifar10_negatives_160/
+public_datasets/
+
+# Intermediate benchmark outputs from earlier runs
+artifacts/
+artifacts_cache160/
+
+# Keep the final balanced run artifacts, including the small checkpoint.
+!artifacts_balanced/
+!artifacts_balanced/**

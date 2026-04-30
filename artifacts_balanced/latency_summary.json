@@ -1,0 +1,14 @@
+{
+  "count": 4746,
+  "checkpoint_loaded": true,
+  "accuracy": 0.9993678887484198,
+  "accuracy_note": null,
+  "p50_total_ms": 7.753399957437068,
+  "p90_total_ms": 8.539200003724545,
+  "p95_total_ms": 8.99115001084283,
+  "p99_total_ms": 10.765519953565676,
+  "max_total_ms": 63.84089996572584,
+  "target_p95_ms": 50.0,
+  "meets_target": true,
+  "csv": "C:\\Users\\MyPC\\Documents\\New project 4\\artifacts_balanced\\latency_breakdown.csv"
+}
