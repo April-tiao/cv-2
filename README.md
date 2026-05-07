@@ -241,3 +241,48 @@ read_ms, decode_ms, preprocess_ms, inference_ms, total_ms
 |---|---|---|
 | 2026-04-30 | 首次整理并推送图像分类实验到 `April-tiao/cv-2`。包含训练脚本、负样本生成脚本、最终模型权重和 benchmark 结果。 | 仓库具备可追踪的模型产物和复现实验入口。 |
 | 2026-04-30 | 重写 README，补充项目目标、目录结构、数据约定、复现实验命令、指标结果、风险说明和变更记录。 | 文档从简略说明升级为完整项目说明，后续修改可以持续记录。 |
+
+## ???????????
+
+???????????
+
+```text
+/XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/
+```
+
+??????????????
+
+```text
+data/image_dataset/
+  train/
+    positive/
+    negative/
+  test/
+    positive/
+    negative/
+```
+
+????????????????
+
+- `./data/image_dataset`
+- `../data/image_dataset`
+- `/XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/image_dataset`
+
+????? `.jpg`?`.jpeg`?`.png`?`.bmp`?`.webp`?????? `.gif`?
+
+??????????
+
+```bash
+conda create -n canteen-cv python=3.10 -y
+conda activate canteen-cv
+pip install -r requirements.txt
+python canteen_binary_experiment.py scan
+python canteen_binary_experiment.py train --epochs 10 --batch-size 32
+python canteen_binary_experiment.py evaluate --checkpoint outputs/best_model.pt
+```
+
+????????????????????
+
+```bash
+python canteen_binary_experiment.py scan --data-dir /XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/image_dataset
+```
