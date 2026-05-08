@@ -1,57 +1,42 @@
-# 智慧食堂业务图片二分类
+# 智慧食堂图像三分类
 
-本仓库用于训练“图片是否属于智慧食堂业务”的二分类模型。新的数据结构已经覆盖旧实验结构，训练代码默认读取服务器 `data/image_dataset`。
+本项目使用 MobileNetV3-Small 做图像三分类，用于判断图片属于：
 
-## 标签定义
+| 标签 | 类别 |
+|---:|---|
+| 0 | 其他图片 |
+| 1 | 食物图片 |
+| 2 | 图表图片 |
 
-```text
-positive: 属于智慧食堂业务图片
-negative: 不属于智慧食堂业务图片
-```
+## 数据结构
 
-正样本包括：
-
-- 食物类图片
-- 图表类图片
-- 智慧食堂设备、食堂场景、留样/结算/消费机等业务图片
-
-负样本包括：
-
-- 不属于智慧食堂业务的复杂自然图像、物体图像、人物、交通、建筑等图片
-
-## 数据目录
-
-服务器数据目录：
+默认数据目录名为 `image_dataset_3class`：
 
 ```text
-/XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/
-```
-
-图片数据结构：
-
-```text
-data/image_dataset/
+image_dataset_3class/
   train/
-    positive/
-    negative/
+    0_other/
+    1_food/
+    2_chart/
   test/
-    positive/
-    negative/
+    0_other/
+    1_food/
+    2_chart/
 ```
 
-训练脚本会自动查找：
+脚本会自动查找：
 
 ```text
-./data/image_dataset
-../data/image_dataset
-/XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/image_dataset
+./data/image_dataset_3class
+../data/image_dataset_3class
+./image_dataset_3class
+../image_dataset_3class
+/XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/image_dataset_3class
 ```
 
-支持格式：`.jpg`、`.jpeg`、`.png`、`.bmp`、`.webp`。
+支持 `.jpg`、`.jpeg`、`.png`、`.bmp`、`.webp`，跳过 `.gif`。
 
-`.gif` 会直接跳过，不参与训练和测试统计。
-
-## 安装依赖
+## 安装
 
 ```bash
 conda create -n canteen-cv python=3.10 -y
@@ -59,66 +44,60 @@ conda activate canteen-cv
 pip install -r requirements.txt
 ```
 
-如果服务器需要指定 CUDA 版本，请先按服务器 CUDA 版本安装对应的 `torch` 和 `torchvision`，再执行：
+如需指定 CUDA 版本，请先安装服务器匹配的 `torch` / `torchvision`，再安装其余依赖。
+
+## 使用
+
+检查数据：
 
 ```bash
-pip install pillow tqdm numpy
+python canteen_3class_experiment.py scan
 ```
 
-## 检查数据
+训练：
 
 ```bash
-python canteen_binary_experiment.py scan
+python canteen_3class_experiment.py train --epochs 5 --batch-size 64 --image-size 160
+```
+
+评估：
+
+```bash
+python canteen_3class_experiment.py evaluate --checkpoint outputs_3class/best_model.pt
+```
+
+测速：
+
+```bash
+python canteen_3class_experiment.py latency --checkpoint outputs_3class/best_model.pt
 ```
 
 显式指定数据路径：
 
 ```bash
-python canteen_binary_experiment.py scan --data-dir /XYAIFS00/HOME/pushi_yjliang/pushi_yjliang_1/HDD_POOL/mx/data/image_dataset
+python canteen_3class_experiment.py scan --data-dir /path/to/image_dataset_3class
 ```
 
-## 训练
+## 本地实验结果
 
-```bash
-python canteen_binary_experiment.py train --epochs 10 --batch-size 32
-```
+数据集：3501 张，三类均衡，每类 1167 张。  
+训练集：2799 张；测试集：702 张。
 
-常用参数：
+MobileNetV3-Small，ImageNet 预训练，输入 `160x160`，训练 5 epochs。
 
-```bash
-python canteen_binary_experiment.py train \
-  --model mobilenet_v3_small \
-  --epochs 10 \
-  --batch-size 32 \
-  --image-size 224 \
-  --workers 4 \
-  --lr 3e-4 \
-  --output-dir outputs
-```
+| 指标 | 结果 |
+|---|---:|
+| Accuracy | 98.15% |
+| Macro Precision | 98.16% |
+| Macro Recall | 98.15% |
+| Macro F1 | 98.15% |
 
-默认输出：
+CPU 单张推理时延：
 
-```text
-outputs/best_model.pt
-outputs/last_model.pt
-outputs/metrics.json
-```
-
-## 测试集评估
-
-```bash
-python canteen_binary_experiment.py evaluate --checkpoint outputs/best_model.pt
-```
-
-## 单张图片预测
-
-```bash
-python canteen_binary_experiment.py predict --checkpoint outputs/best_model.pt --image /path/to/image.jpg
-```
-
-## 推理测速
-
-```bash
-python canteen_binary_experiment.py benchmark --model mobilenet_v3_small --batch-size 32
-```
+| 指标 | 时延 |
+|---|---:|
+| Mean | 8.92 ms |
+| P50 | 8.82 ms |
+| P95 | 11.23 ms |
+| P99 | 13.90 ms |
 
